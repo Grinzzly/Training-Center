@@ -1,0 +1,109 @@
+{% set all_groups = object.getUserGroups %}
+
+<div class="container-fluid">
+    {% for row in all_groups|batch(2) %}
+        <div class="row">
+            {% for group in row %}
+                {% set group_title = group.title %}
+                {% set course_title = group.course.title %}
+                {% set teacher = group.teacher %}
+                {% set curator = group.curator %}
+                {% set group_link = admin.showFieldDescriptions.user_groups %}
+
+                <div class="col-md-6 col-lg-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4>
+                                <a href="{{ group_link.associationadmin.generateObjectUrl(
+                                        'show',
+                                        group,
+                                        group_link.options.route.parameters
+                                    )
+                                }}">
+                                    {{ group_title }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Название курса:
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ course_title }}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Преподаватель:
+                                        </div>
+                                        <div class="col-md-8">
+                                            {% if teacher %}
+                                                <a href="{{ admin.generateObjectUrl('show', teacher) }}">
+                                                    {{ teacher.getFullName }}
+                                                </a>
+                                            {% else %}
+                                                <a
+                                                        class="btn btn-primary btn-sm"
+                                                        href="{{ group_link.associationadmin.generateObjectUrl(
+                                                        'edit',
+                                                        group,
+                                                        group_link.options.route.parameters
+                                                        )
+                                                        }}"
+                                                >
+                                                    Добавить преподавателя
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Куратор:
+                                        </div>
+                                        <div class="col-md-8">
+                                            {% if curator %}
+                                                <a href="{{ admin.generateObjectUrl('show', curator) }}">
+                                                    {{ curator.getFullName }}
+                                                </a>
+                                            {% else %}
+                                                <a
+                                                    class="btn btn-primary btn-sm"
+                                                    href="{{ group_link.associationadmin.generateObjectUrl(
+                                                            'edit',
+                                                            group,
+                                                            group_link.options.route.parameters
+                                                        )
+                                                    }}"
+                                                >
+                                                    Добавить куратора
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Дата создания:
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ group.getCreatedAt().format('d.m.Y') }}
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

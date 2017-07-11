@@ -1,0 +1,22 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="breadcrumb">
+    {{ 'layout.register'|trans }}
+</div>
+<div class="col-8 offset-2">
+    {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
+    {{ form_row(form.last_name) }}
+    {{ form_row(form.first_name) }}
+    {{ form_row(form.middle_name) }}
+    {{ form_row(form.phone) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword) }}
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="{{ 'registration.submit'|trans }}" />
+        <a class="btn btn-link" href="{{ path('fos_user_security_login') }}">
+            Уже есть аккаунт?
+        </a>
+    </div>
+    {{ form_end(form) }}
+</div>

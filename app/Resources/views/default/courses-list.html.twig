@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <div id="welcome">
+                <h1><span>Courses</span> on Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</h1>
+            </div>
+
+            <ul class="list-group">
+                {% for course in courses %}
+                    <li class="list-group-item justify-content-between active">
+                        <h4 class="mb-1">{{ course.title }}</h4>{{ course.description }}
+                        <small class="text-muted" data-toggle="tooltip" data-placement="top" title="This course was found at:">{{course.createdAt|date('Y-m-d')}}</small>
+                        <span class="badge badge-default badge-pill"  data-toggle="tooltip" data-placement="top" title="Groups count in this course">{{ course.group.count() }}</span>
+                    </li>
+                        <ul class="list-group">
+                            {% for group in course.group %}
+                                <li class="list-group-item justify-content-between"  data-toggle="tooltip" data-placement="top" title="This groups belongs to {{ course.title }} course.">
+                                    {{ group.title }}
+                                    <small class="text-muted"  data-toggle="tooltip" data-placement="top" title="This group was found at:">{{group.createdAt|date('Y-m-d')}}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body { background: #F5F5F5; font: 18px/1.5 sans-serif; }
+    h1, h2 { line-height: 1.2; margin: 0 0 .5em; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 21px; margin-bottom: 1em; }
+    p { margin: 0 0 1em 0; }
+    a { color: #0000F0; }
+    a:hover { text-decoration: none; }
+    code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
+    #wrapper { background: #FFF; margin: 1em auto; max-width: 800px; width: 95%; }
+    #container { padding: 2em; }
+    #welcome, #status { margin-bottom: 2em; }
+    #welcome h1 span { display: block; font-size: 75%; }
+    #icon-status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
+    #icon-book { display: none; }
+
+    @media (min-width: 768px) {
+        #wrapper { width: 80%; margin: 2em auto; }
+        #icon-book { display: inline-block; }
+        #status a, #next a { display: block; }
+
+        @-webkit-keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+        .sf-toolbar { opacity: 0; -webkit-animation: fade-in 1s .2s forwards; animation: fade-in 1s .2s forwards;}
+    }
+</style>
+{% endblock %}

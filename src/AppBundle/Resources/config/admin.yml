@@ -1,0 +1,35 @@
+services:
+    app.admin.user:
+        class: AppBundle\Admin\UserAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Пользователи", label: "Пользователи" }
+        arguments:
+            - null
+            - AppBundle\Entity\Users
+            - AppBundle:User
+        calls:
+            - [ setTemplate, [show, SonataAdminBundle:CRUD:user_base_show.html.twig]]
+
+    app.admin.course:
+        class: AppBundle\Admin\CourseAdmin
+        arguments: [~, AppBundle\Entity\Course, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: CourseAdmin }
+
+    app.admin.group:
+        class: AppBundle\Admin\GroupAdmin
+        arguments: [~, AppBundle\Entity\Groups, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Group }
+
+    app.admin.lessons:
+        class: AppBundle\Admin\LessonsAdmin
+        arguments: [~, AppBundle\Entity\Lessons, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Lessons }
+
+    app.admin.home_assignment:
+        class: AppBundle\Admin\HomeAssignmentAdmin
+        arguments: [~, AppBundle\Entity\HomeAssignment, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: HomeAssignment }

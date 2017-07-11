@@ -1,0 +1,137 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+        AppBundle\Entity\User: bcrypt
+
+    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+            logout: ~
+
+            # form_login:
+                # csrf_token_generator: security.csrf.token_manager
+
+            guard:
+                authenticators:
+                    - app.security.login_form_authenticator
+
+            remember_me:
+                secret: '%secret%'
+
+    role_hierarchy:
+        ROLE_USER:
+            - ROLE_USER
+            - ROLE_APP_STUFF
+            - ROLE_APP_ADMIN
+            # category
+            - ROLE_APP_CATEGORY_LIST
+            # group
+            - ROLE_APP_GROUP_LIST
+        ROLE_LISTENER:
+            - ROLE_USER
+            - ROLE_APP_STUFF
+            - ROLE_APP_ADMIN
+            # course
+            - ROLE_APP_ADMIN_COURSE_LIST
+            - ROLE_APP_ADMIN_COURSE_VIEW
+            # group
+            - ROLE_APP_ADMIN_GROUP_LIST
+        ROLE_PARENT:
+            - ROLE_USER
+            - ROLE_APP_STUFF
+            - ROLE_APP_ADMIN
+            # course
+            - ROLE_APP_ADMIN_COURSE_LIST
+            - ROLE_APP_ADMIN_COURSE_VIEW
+            # group
+            - ROLE_APP_ADMIN_GROUP_LIST
+            - ROLE_APP_ADMIN_GROUP_VIEW
+        ROLE_CHILD:
+            - ROLE_USER
+            - ROLE_APP_STUFF
+            - ROLE_APP_ADMIN
+            # course
+            - ROLE_APP_ADMIN_COURSE_LIST
+            - ROLE_APP_ADMIN_COURSE_VIEW
+            # group
+            - ROLE_APP_ADMIN_GROUP_LIST
+            - ROLE_APP_ADMIN_GROUP_VIEW
+        ROLE_TEACHER:
+            - ROLE_USER
+            - ROLE_APP_STUFF
+            - ROLE_APP_ADMIN
+            # user
+            - ROLE_APP_ADMIN_USER_LIST
+            - ROLE_APP_ADMIN_USER_VIEW
+            # course
+            - ROLE_APP_ADMIN_COURSE_LIST
+            - ROLE_APP_ADMIN_COURSE_VIEW
+            # group
+            - ROLE_APP_ADMIN_GROUP_LIST
+            - ROLE_APP_ADMIN_GROUP_VIEW
+        ROLE_CURATOR:
+            - ROLE_USER
+            - ROLE_APP_STUFF
+            - ROLE_APP_ADMIN
+            # user
+            - ROLE_APP_ADMIN_USER_LIST
+            - ROLE_APP_ADMIN_USER_VIEW
+            - ROLE_APP_ADMIN_USER_EDIT
+            # course
+            - ROLE_APP_ADMIN_COURSE_LIST
+            - ROLE_APP_ADMIN_COURSE_VIEW
+            - ROLE_APP_ADMIN_COURSE_EDIT
+            # group
+            - ROLE_APP_ADMIN_GROUP_LIST
+            - ROLE_APP_ADMIN_GROUP_VIEW
+            - ROLE_APP_ADMIN_GROUP_EDIT
+        ROLE_ADMIN:
+            - ROLE_APP_ADMIN
+            # user
+            - ROLE_APP_ADMIN_USER_CREATE
+            - ROLE_APP_ADMIN_USER_DELETE
+            - ROLE_APP_ADMIN_USER_EDIT
+            - ROLE_APP_ADMIN_USER_LIST
+            - ROLE_APP_ADMIN_USER_VIEW
+            - ROLE_APP_ADMIN_USER_EXPORT
+            - ROLE_APP_ADMIN_USER_OPERATOR
+            - ROLE_APP_ADMIN_USER_MASTER
+            # course
+            - ROLE_APP_ADMIN_COURSE_CREATE
+            - ROLE_APP_ADMIN_COURSE_DELETE
+            - ROLE_APP_ADMIN_COURSE_EDIT
+            - ROLE_APP_ADMIN_COURSE_LIST
+            - ROLE_APP_ADMIN_COURSE_VIEW
+            - ROLE_APP_ADMIN_COURSE_EXPORT
+            - ROLE_APP_ADMIN_COURSE_OPERATOR
+            - ROLE_APP_ADMIN_COURSE_MASTER
+            # group
+            - ROLE_APP_ADMIN_GROUP_CREATE
+            - ROLE_APP_ADMIN_GROUP_DELETE
+            - ROLE_APP_ADMIN_GROUP_EDIT
+            - ROLE_APP_ADMIN_GROUP_LIST
+            - ROLE_APP_ADMIN_GROUP_VIEW
+            - ROLE_APP_ADMIN_GROUP_EXPORT
+            - ROLE_APP_ADMIN_GROUP_OPERATOR
+            - ROLE_APP_ADMIN_GROUP_MASTER
+        ROLE_SUPER_ADMIN:
+            - ROLE_ADMIN
+            - ROLE_ALLOWED_TO_SWITCH
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/user, role: ROLE_USER }
+        - { path: ^/app/user/, role: [ROLE_TEACHER, ROLE_CURATOR, ROLE_ADMIN, ROLE_SUPER_ADMIN] }

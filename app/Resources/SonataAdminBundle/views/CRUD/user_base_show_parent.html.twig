@@ -1,0 +1,46 @@
+{% set parent = object.getParent() %}
+<table class="table">
+    <tbody>
+    {% block show_field %}
+        <tr class="sonata-ba-view-container">
+            {% if elements['last_name'] is defined %}
+                {{ elements['last_name']|render_view_element(parent)}}
+            {% endif %}
+        </tr>
+        <tr class="sonata-ba-view-container">
+            {% if elements['first_name'] is defined %}
+                {{ elements['first_name']|render_view_element(parent)}}
+            {% endif %}
+        </tr>
+        <tr class="sonata-ba-view-container">
+            {% if elements['middle_name'] is defined %}
+                {{ elements['middle_name']|render_view_element(parent)}}
+            {% endif %}
+        </tr>
+        <tr class="sonata-ba-view-container">
+            {% if elements['email'] is defined %}
+                <th class="diff">E-mail</th>
+                <td>
+                    <a href="{{ admin.generateObjectUrl('show', parent) }}">
+                        {{ parent.getEmail() }}
+                    </a>
+                </td>
+            {% endif %}
+        </tr>
+        <tr class="sonata-ba-view-container">
+            {% if elements['phone'] is defined %}
+                {{ elements['phone']|render_view_element(parent)}}
+            {% endif %}
+        </tr>
+        <tr class="sonata-ba-view-container">
+            <th class="diff">Дата регистрации</th>
+            <td>
+                {% set data = parent.getCreatedAt().format('d.m.Y') %}
+                {% if(data is defined) %}
+                    {{ data|nl2br }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endblock %}
+    </tbody>
+</table>

@@ -1,0 +1,379 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use AppBundle\Entity\Group;
+use AppBundle\Entity\User as ParentUser;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @ORM\Table(name="`users`")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ */
+class User extends BaseUser
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $parent;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $first_name;
+
+    /**
+     * @ORM\Column(type="string",  nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $last_name;
+
+    /**
+     * @ORM\Column(type="string",  nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $middle_name;
+
+    /**
+     * @ORM\Column(type="string",  nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $phone;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group", inversedBy="user", cascade={"persist"})
+     * @ORM\JoinTable(name="user_group",
+     *     joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
+     *     )
+     */
+    private $group;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Group", mappedBy="teacher")
+     */
+    private $teacherGroup;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Group", mappedBy="curator")
+     */
+    private $curatorGroup;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return sprintf('%s %s %s. E-mail: %s',
+            $this->last_name,
+            $this->first_name,
+            $this->middle_name,
+            $this->email
+        );
+    }
+
+
+    /**
+     * Set firstName
+     *
+     * @param string $firstName
+     *
+     * @return User
+     */
+    public function setFirstName($firstName)
+    {
+        $this->first_name = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Get firstName
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->first_name;
+    }
+
+    /**
+     * Set lastName
+     *
+     * @param string $lastName
+     *
+     * @return User
+     */
+    public function setLastName($lastName)
+    {
+        $this->last_name = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get lastName
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->last_name;
+    }
+
+    /**
+     * Set middleName
+     *
+     * @param string $middleName
+     *
+     * @return User
+     */
+    public function setMiddleName($middleName)
+    {
+        $this->middle_name = $middleName;
+
+        return $this;
+    }
+
+    /**
+     * Get middleName
+     *
+     * @return string
+     */
+    public function getMiddleName()
+    {
+        return $this->middle_name;
+    }
+
+    /**
+     * Set phone
+     *
+     * @param string $phone
+     *
+     * @return User
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get phone
+     *
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return User
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return User
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set deletedAt
+     *
+     * @param \DateTime $deletedAt
+     *
+     * @return User
+     */
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get deletedAt
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \AppBundle\Entity\User $parent
+     *
+     * @return User
+     */
+    public function setParent(\AppBundle\Entity\User $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Get group
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Add teacherGroup
+     *
+     * @param \AppBundle\Entity\Group $teacherGroup
+     *
+     * @return User
+     */
+    public function addTeacherGroup(\AppBundle\Entity\Group $teacherGroup)
+    {
+        $this->teacherGroup[] = $teacherGroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove teacherGroup
+     *
+     * @param \AppBundle\Entity\Group $teacherGroup
+     */
+    public function removeTeacherGroup(\AppBundle\Entity\Group $teacherGroup)
+    {
+        $this->teacherGroup->removeElement($teacherGroup);
+    }
+
+    /**
+     * Get teacherGroup
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTeacherGroup()
+    {
+        return $this->teacherGroup;
+    }
+
+    /**
+     * Add curatorGroup
+     *
+     * @param \AppBundle\Entity\Group $curatorGroup
+     *
+     * @return User
+     */
+    public function addCuratorGroup(\AppBundle\Entity\Group $curatorGroup)
+    {
+        $this->curatorGroup[] = $curatorGroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove curatorGroup
+     *
+     * @param \AppBundle\Entity\Group $curatorGroup
+     */
+    public function removeCuratorGroup(\AppBundle\Entity\Group $curatorGroup)
+    {
+        $this->curatorGroup->removeElement($curatorGroup);
+    }
+
+    /**
+     * Get curatorGroup
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCuratorGroup()
+    {
+        return $this->curatorGroup;
+    }
+}

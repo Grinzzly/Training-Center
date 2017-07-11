@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+
+    <title>{% block title %}Title{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body>
+
+{% block navbar %}{% endblock %}
+
+<div class="container-fluid" style="margin-top: 100px">
+
+    {% block body %}{% endblock %}
+
+    <footer></footer>
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{{ asset('js/jquery.js')  }}"></script>
+<script>window.jQuery || document.write('<script src="js/jquery.js"><\/script>')</script>
+<script src="{{ asset('js/tether.min.js')  }}"></script>
+<script src="{{ asset('js/bootstrap.min.js')  }}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{{ asset('js/ie10-viewport-bug-workaround.js') }}"></script>
+
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use AppBundle\Entity\Groups;
+use AppBundle\Entity\Users as ParentUser;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @ORM\Table(name="`users`")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ */
+class Users extends BaseUser
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $parent;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $first_name;
+
+    /**
+     * @ORM\Column(type="string",  nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $last_name;
+
+    /**
+     * @ORM\Column(type="string",  nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $middle_name;
+
+    /**
+     * @ORM\Column(type="string",  nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $phone;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Groups", mappedBy="users")
+     */
+    private $user_groups;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Groups", mappedBy="teacher")
+     */
+    private $teacherGroup;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Groups", mappedBy="curator")
+     */
+    private $curatorGroup;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->user_groups = new ArrayCollection();
+        $this->curatorGroup = new ArrayCollection();
+        $this->teacherGroup = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return sprintf('%s %s %s. E-mail: %s',
+            $this->last_name,
+            $this->first_name,
+            $this->middle_name,
+            $this->email
+        );
+    }
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s %s %s. E-mail: %s',
+            $this->last_name,
+            $this->first_name,
+            $this->middle_name,
+            $this->email
+        );
+    }
+}

@@ -1,0 +1,79 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use AppBundle\Classes\ForUsingToString;
+use AppBundle\Entity\Users;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
+use AppBundle\Entity\Course;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="`groups`")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ */
+class Groups extends ForUsingToString
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $title;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Course", inversedBy="group")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $course;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users", inversedBy="teacherGroup")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $teacher;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users", inversedBy="curatorGroup")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $curator;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Users", inversedBy="user_groups")
+     */
+    private $users;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+}

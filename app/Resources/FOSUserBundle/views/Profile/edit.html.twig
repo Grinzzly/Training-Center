@@ -1,0 +1,32 @@
+{% extends "FOSUserBundle:Profile:index.html.twig" %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block tab_menu_navbar_header %}
+    <div class="navbar-header">
+        <span class="navbar-brand">Редактировать профиль</span>
+    </div>
+{% endblock %}
+
+{% block sonata_admin_content %}
+    {% block notice %}
+        {% include 'SonataCoreBundle:FlashMessage:render.html.twig' %}
+    {% endblock notice %}
+
+    <div class="sonata-ba-view">
+        <div class="col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
+            {{ form_start(form, {'method': 'post', 'action': path('fos_user_profile_edit')}) }}
+            {{ form_row(form.last_name) }}
+            {{ form_row(form.first_name) }}
+            {{ form_row(form.middle_name) }}
+            {{ form_row(form.phone) }}
+            {{ form_row(form.email) }}
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="Обновить" />
+                <a href="{{ path('fos_user_change_password') }}">
+                    Сменить пароль
+                </a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock sonata_admin_content %}

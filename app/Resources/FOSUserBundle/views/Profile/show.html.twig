@@ -1,0 +1,212 @@
+{% extends "FOSUserBundle:Profile:index.html.twig" %}
+
+
+{% block tab_menu_navbar_header %}
+    <div class="navbar-header">
+        <span class="navbar-brand">Мой профиль</span>
+    </div>
+{% endblock %}
+
+{% block sonata_admin_content %}
+    {% block notice %}
+        {% include 'SonataCoreBundle:FlashMessage:render.html.twig' %}
+    {% endblock notice %}
+
+    <div class="sonata-ba-view">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active">
+                    <a href="#tab_profile" data-toggle="tab">
+                        <i class="fa fa-exclamation-circle has-errors hide" aria-hidden="true"></i>
+                        Профиль
+                    </a>
+                </li>
+                {% if user.getUserGroups|length > 0 and is_granted('ROLE_LISTENER') %}
+                    <li>
+                        <a href="#tab_groups" data-toggle="tab">
+                            <i class="fa fa-exclamation-circle has-errors hide" aria-hidden="true"></i>
+                            Группы
+                        </a>
+                    </li>
+                {% endif %}
+                {% if children|length > 0 and is_granted('ROLE_PARENT') %}
+                    <li>
+                        <a href="#tab_children" data-toggle="tab">
+                            <i class="fa fa-exclamation-circle has-errors hide" aria-hidden="true"></i>
+                            Дети
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="tab_profile">
+                    <div class="box-body  container-fluid">
+                        <div class="sonata-ba-collapsed-fields">
+                            <table class="table">
+                                <tbody>
+                                    <tr class="sonata-ba-view-container">
+                                        <th class="diff">Фамилия</th>
+                                        <td>
+                                            {{ user.getLastName|nl2br }}
+                                        </td>
+                                    </tr>
+                                    <tr class="sonata-ba-view-container">
+                                        <th class="diff">Имя</th>
+                                        <td>
+                                            {{ user.getFirstName|nl2br }}
+                                        </td>
+                                    </tr>
+                                    <tr class="sonata-ba-view-container">
+                                        <th class="diff">Отчество</th>
+                                        <td>
+                                            {{ user.getMiddleName|nl2br }}
+                                        </td>
+                                    </tr>
+                                    <tr class="sonata-ba-view-container">
+                                        <th class="diff">E-Mail</th>
+                                        <td>
+                                            {{ user.getEmail|nl2br }}
+                                        </td>
+                                    </tr>
+                                    <tr class="sonata-ba-view-container">
+                                        <th class="diff">Телефон</th>
+                                        <td>
+                                            {{ user.getPhone|nl2br }}
+                                        </td>
+                                    </tr>
+                                    <tr class="sonata-ba-view-container">
+                                        <th class="diff">Дата регистрации</th>
+                                        <td>
+                                            {{ user.getCreatedAt().format('d.m.Y')|nl2br }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% if user.getUserGroups|length > 0 and is_granted('ROLE_LISTENER') %}
+                    <div class="tab-pane fade" id="tab_groups">
+                        <div class="box-body  container-fluid">
+                            <div class="sonata-ba-collapsed-fields">
+                                {% for row in user.getUserGroups|batch(2) %}
+                                    <div class="row">
+                                        {% for group in row %}
+                                            {% set group_title = group.title %}
+                                            {% set course_title = group.course.title %}
+                                            {% set teacher = group.teacher %}
+                                            {% set curator = group.curator %}
+
+                                            <div class="col-md-6 col-lg-6">
+                                                <div class="panel panel-info">
+                                                    <div class="panel-heading">
+                                                        <h4>{{ group_title }}</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        Название курса:
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        {{ course_title }}
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        Преподаватель:
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        {% if teacher %}
+                                                                            {{ teacher.getFullName }}
+                                                                        {% else %}
+                                                                            Преподаватель не назначен
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        Куратор:
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        {% if curator %}
+                                                                            {{ curator.getFullName }}
+                                                                        {% else %}
+                                                                            Куратор не назначен
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        Дата создания:
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        {{ group.getCreatedAt().format('d.m.Y') }}
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if children|length > 0 and is_granted('ROLE_PARENT') %}
+                    <div class="tab-pane fade" id="tab_children">
+                        <div class="box-body  container-fluid">
+                            <div class="sonata-ba-collapsed-fields">
+                                {% for row in children|batch(2) %}
+                                    <div class="row">
+                                        {% for child in row %}
+                                            <div class="col-md-6 col-lg-6">
+                                                <div class="panel panel-info">
+                                                    <div class="panel-body">
+                                                        <table class="table">
+                                                            <tbody>
+                                                            <tr class="sonata-ba-view-container">
+                                                                <th class="diff">Фамилия</th>
+                                                                <td>
+                                                                    {{ child.getLastName|nl2br }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="sonata-ba-view-container">
+                                                                <th class="diff">Имя</th>
+                                                                <td>
+                                                                    {{ child.getFirstName|nl2br }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="sonata-ba-view-container">
+                                                                <th class="diff">Отчество</th>
+                                                                <td>
+                                                                    {{ child.getMiddleName|nl2br }}
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock sonata_admin_content %}

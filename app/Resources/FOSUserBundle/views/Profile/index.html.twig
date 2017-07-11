@@ -1,0 +1,22 @@
+{% extends "SonataAdminBundle::standard_layout.html.twig" %}
+
+{% block sonata_page_content %}
+    <section class="content-header">
+        {% block sonata_page_content_header %}
+            {% block sonata_page_content_nav %}
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        {% block tab_menu_navbar_header %}{% endblock %}
+                        <div class="navbar-collapse">
+                            {% block sonata_admin_content_actions_wrappers %}{% endblock sonata_admin_content_actions_wrappers %}
+                        </div>
+                    </div>
+                </nav>
+            {% endblock sonata_page_content_nav %}
+        {% endblock sonata_page_content_header %}
+    </section>
+
+    <section class="content">
+        {% block sonata_admin_content %}{% endblock sonata_admin_content %}
+    </section>
+{% endblock sonata_page_content %}
